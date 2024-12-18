@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cdu.mapper.UserMapper">
+    <!--新增用户-->
+    <insert id="insert">
+        INSERT INTO t_user (username,
+                            password,
+                            salt,
+                            is_delete,
+                            phone,
+                            email,
+                            gender,
+                            avatar,
+                            created_user,
+                            created_time,
+                            modified_user,
+                            modified_time)
+        VALUES (#{username},
+                #{password},
+                #{salt},
+                #{isDelete},
+                #{phone},
+                #{email},
+                #{gender},
+                #{avatar},
+                #{createdUser},
+                now(),
+                #{modifiedUser},
+                now())
+    </insert>
+
+    <!--根据用户名查询所有用户用户-->
+    <select id="findByUsername" resultType="com.cdu.pojo.entity.User">
+        SELECT id,
+               username,
+               password,
+               salt,
+               is_delete     AS isDelete,
+               phone,
+               email,
+               gender,
+               avatar,
+               created_user  AS createdUser,
+               created_time  AS createdTime,
+               modified_user AS modifiedUser,
+               modified_time AS modifiedTime
+        FROM t_user
+        WHERE username = #{username}
+    </select>
+
+
+    <!--根据用户名查询未禁用的用户-->
+    <select id="findActiveUserByUsername" resultType="com.cdu.pojo.entity.User">
+        SELECT id,
+               username,
+               password,
+               salt,
+               is_delete     AS isDelete,
+               phone,
+               email,
+               gender,
+               avatar,
+               created_user  AS createdUser,
+               created_time  AS createdTime,
+               modified_user AS modifiedUser,
+               modified_time AS modifiedTime
+        FROM t_user
+        WHERE username = #{username}
+          AND is_delete = 0
+    </select>
+
+
+    <!--根据用户查询用户信息-->
+    <select id="getUserByName" resultType="com.cdu.pojo.entity.User">
+        select * from t_user where username=#{username}
+    </select>
+
+    <!--设置头像-->
+    <update id="setAvatar">
+        update t_user
+        set avatar=#{avatar},
+            modified_user=#{modifiedUser},
+            modified_time=now()
+        where username=#{username}
+    </update>
+
+</mapper>
